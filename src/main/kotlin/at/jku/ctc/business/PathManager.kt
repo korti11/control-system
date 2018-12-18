@@ -9,15 +9,25 @@ open class PathManager {
 
     fun createMaintenancePath(startDate: LocalDateTime, endDate: LocalDateTime,
                               vararg streets: Street): MaintenancePath {
-        TODO("Implement the creation of an maintenance path")
+        val maintenancePath = MaintenancePath(Direction(streets[0]), startDate, endDate)
+        streets.forEachIndexed { index, street ->
+            street.takeIf { index > 0 }?.apply { constructPath(maintenancePath, street) }
+        }
+        return maintenancePath
     }
 
-    fun createBlockedPath(startDate: LocalDateTime, blockadeType: BlockadeType, vararg streets: Street): BlockedPath {
-        TODO("Implement the creation of an blocked path")
+    fun createBlockedPath(startDate: LocalDateTime, blockadeType: BlockadeType, priorityType: PriorityType,
+                          vararg streets: Street): BlockedPath {
+        val blockedPath = BlockedPath(Direction(streets[0]), startDate, blockadeType, priorityType)
+        streets.forEachIndexed { index, street ->
+            street.takeIf { index > 0 }?.apply { constructPath(blockedPath, street) }
+        }
+        return blockedPath
     }
 
     fun constructPath(path: Path, street: Street): Path {
-        TODO("Implement the construction of a path")
+        path.addDirection(street)
+        return path
     }
 
     fun findShortestPath(startAddress: Address, endAddress: Address): ShortestPath {

@@ -10,4 +10,13 @@ open class Path(open val start: Direction, var end: Direction = start) : Iterabl
         this.end.direction = Direction(street)
         this.end = checkNotNull(this.end.direction)
     }
+
+    fun removeEnd() {
+        this.forEach {
+            it.takeIf { direction -> direction.next() == end }?.apply {
+                it.direction = null
+                end = it
+            }
+        }
+    }
 }
