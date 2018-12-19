@@ -6,12 +6,12 @@ open class Path(open val start: Direction, var end: Direction = start) : Iterabl
         return start
     }
 
-    fun addDirection(street: Street) {
+    open fun addDirection(street: Street) {
         this.end.direction = Direction(street)
         this.end = checkNotNull(this.end.direction)
     }
 
-    fun removeEnd() {
+    open fun removeEnd() {
         this.forEach {
             it.takeIf { direction -> direction.next() == end }?.apply {
                 it.direction = null
