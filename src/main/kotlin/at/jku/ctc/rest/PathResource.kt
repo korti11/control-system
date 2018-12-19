@@ -33,7 +33,8 @@ class PathResource {
     @Path("/shortest")
     @Produces(MediaType.APPLICATION_JSON)
     fun getShortestPath(@QueryParam("from") from: String, @QueryParam("to") to: String,
-                        @QueryParam("avoidance") avoidance: Boolean = false, @QueryParam("priority") priority: Int = 0):
+                        @QueryParam("avoidance") avoidance: Boolean = false,
+                        @QueryParam("priority") priority: String = "Lowest"):
             Response {
         if(from.toLongOrNull() != null && to.toLongOrNull() != null) {
             return Response.ok(pathFacade.findShortestPath(from.toLong(), to.toLong(), avoidance, priority)).build()
