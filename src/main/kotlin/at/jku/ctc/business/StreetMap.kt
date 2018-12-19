@@ -5,13 +5,19 @@ import at.jku.ctc.entity.Path
 import at.jku.ctc.entity.PriorityType
 import at.jku.ctc.entity.Street
 import javax.ejb.Singleton
+import javax.inject.Inject
 
 @Singleton
-class StreetMap(val mapCache: Map<Street, Array<Street>> = mutableMapOf(),
+class StreetMap(val mapCache: MutableMap<Street, Array<Street>> = mutableMapOf(),
                 val blockedPathsCache: Array<BlockedPath> = emptyArray()) {
 
+    @Inject
+    lateinit var streetFacade: StreetFacade
+
     fun getStreetNeighbors(street: Street): Array<Street> {
-        TODO("If street is in cache load neighbors from cache otherwise get neighbors from the endpoint")
+        return mapCache.getOrPut(street) {
+            streetFacade.getNeighbors(street.id).toTypedArray()
+        }
     }
 
     fun isPathBlockedForPriority(path: Path, priorityType: PriorityType): Boolean {

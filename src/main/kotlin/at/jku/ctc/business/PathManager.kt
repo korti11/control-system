@@ -1,11 +1,16 @@
 package at.jku.ctc.business
 
+import at.jku.ctc.algorithm.IShortestPath
 import at.jku.ctc.entity.*
 import java.time.LocalDateTime
 import javax.ejb.Stateless
+import javax.inject.Inject
 
 @Stateless
 open class PathManager {
+
+    @Inject
+    private lateinit var shortestPath: IShortestPath
 
     fun createMaintenancePath(startDate: LocalDateTime, endDate: LocalDateTime,
                               vararg streets: Street): MaintenancePath {
@@ -31,7 +36,7 @@ open class PathManager {
     }
 
     fun findShortestPath(startAddress: Address, endAddress: Address): ShortestPath {
-        TODO("Implement the algorithm to find the shortest path from point A to point B")
+        return shortestPath.findShortestPath(startAddress, endAddress, PriorityType.Lowest)
     }
 
     fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType): ShortestPath {
