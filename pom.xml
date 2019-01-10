@@ -12,6 +12,8 @@
     <properties>
         <wildfly.swarm.version>2018.5.0</wildfly.swarm.version>
         <javaee.version>8.0</javaee.version>
+        <derby.version>10.14.2.0</derby.version>
+
         <junit.version>4.12</junit.version>
         <mockito.version>2.23.4</mockito.version>
 
@@ -46,6 +48,12 @@
             <artifactId>javaee-api</artifactId>
             <version>${javaee.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

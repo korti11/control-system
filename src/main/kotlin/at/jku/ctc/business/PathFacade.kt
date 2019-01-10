@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.json.JsonObject
 
 @Stateless
-class PathFacade {
+open class PathFacade {
 
     @Inject
     private lateinit var pathManager: PathManager
@@ -36,7 +36,7 @@ class PathFacade {
     }
 
     fun findShortestPath(from: Long, to: Long, avoidance: Boolean, priority: String): ShortestPath {
-        return findShortestPath(streetFacade.getById(from), streetFacade.getById(to),
+        return findShortestPath(streetFacade.getById(from)!!, streetFacade.getById(to)!!,
                 avoidance, PriorityType.valueOf(priority))
     }
 

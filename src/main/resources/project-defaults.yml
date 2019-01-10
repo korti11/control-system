@@ -1,0 +1,13 @@
+swarm:
+  datasources:
+    data-sources:
+      DerbyDS:
+        driver-name: derby-embedded
+        connection-url: jdbc:derby:controlSystemDB;create=true
+        user-name: sa
+        password: sa
+    jdbc-drivers:
+      derby-embedded:
+        driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
+        xa-datasource-name: org.apache.derby.jdbc.EmbeddedXADataSource
+        driver-module-name: org.apache.derby.embedded.jdbc

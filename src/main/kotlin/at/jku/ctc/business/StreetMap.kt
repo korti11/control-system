@@ -8,7 +8,7 @@ import javax.ejb.Singleton
 import javax.inject.Inject
 
 @Singleton
-class StreetMap(val mapCache: MutableMap<Street, Array<Street>> = mutableMapOf(),
+open class StreetMap(val mapCache: MutableMap<Street, Array<Street>> = mutableMapOf(),
                 val blockedPathsCache: Array<BlockedPath> = emptyArray()) {
 
     @Inject

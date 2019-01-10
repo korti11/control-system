@@ -6,7 +6,7 @@ import javax.ejb.Stateless
 import javax.inject.Inject
 
 @Stateless
-class Dijkstra : IShortestPath {
+open class Dijkstra : IShortestPath {
 
     @Inject
     private lateinit var streetMap: StreetMap

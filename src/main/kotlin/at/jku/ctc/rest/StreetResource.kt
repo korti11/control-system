@@ -10,25 +10,25 @@ import javax.ws.rs.core.Response
 open class StreetResource {
 
     @Inject
-    lateinit var streetFacade: StreetFacade
+    private lateinit var streetFacade: StreetFacade
 
     @GET
     @Path("{streetID}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStreet(@PathParam("streetID") id: Long): Response {
+    open fun getStreet(@PathParam("streetID") id: Long): Response {
         return Response.ok(streetFacade.getById(id)).build()
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStreet(@QueryParam("streetName") name: String): Response {
+    open fun getStreet(@QueryParam("streetName") name: String): Response {
         return Response.ok(streetFacade.getByName(name)).build()
     }
 
     @GET
     @PathParam("{streetID}/neighbors")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStreetNeighbors(@PathParam("streetID") id: Long): Response {
+    open fun getStreetNeighbors(@PathParam("streetID") id: Long): Response {
         return Response.ok(streetFacade.getNeighbors(id)).build()
     }
 
