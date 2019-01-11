@@ -2,10 +2,10 @@ package at.jku.ctc.algorithm
 
 import at.jku.ctc.business.StreetMap
 import at.jku.ctc.entity.*
-import javax.ejb.Stateless
+import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 
-@Stateless
+@RequestScoped
 open class Dijkstra : IShortestPath {
 
     @Inject
@@ -17,17 +17,18 @@ open class Dijkstra : IShortestPath {
     override fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType):
             ShortestPath {
         var currentNode = ShortestPath(Direction(startAddress.street))
-        while (currentNode.end.street == endAddress.street) {
+        while (currentNode.end.street != endAddress.street) {
             seekedStreets[currentNode.end.street] = currentNode
             val neighbors = streetMap.getStreetNeighbors(currentNode.end.street)
             for(neighbor in neighbors) {
-                if(seekedStreets.containsKey(neighbor)) {
+                if(!seekedStreets.containsKey(neighbor)) {
                     val newPath = currentNode.copy()
                     newPath.addDirection(neighbor)
                     this.neighbors.add(newPath)
                 }
             }
             currentNode = checkNotNull(this.neighbors.minBy { it.totalLength })
+            this.neighbors.remove(currentNode)
         }
         return currentNode
     }

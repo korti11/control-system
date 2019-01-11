@@ -1,6 +1,6 @@
 package at.jku.ctc.entity
 
-open class Path(open val start: Direction, var end: Direction = start) : Iterable<Direction> {
+open class Path(open val start: Direction, open var end: Direction = start) : Iterable<Direction> {
 
     override fun iterator(): Iterator<Direction> {
         return start

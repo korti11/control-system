@@ -1,6 +1,7 @@
 package at.jku.ctc.entity
 
-data class ShortestPath(override val start: Direction, var totalLength: Int = 0) : Path(start) {
+data class ShortestPath(override val start: Direction, override var end: Direction = start,
+                        var totalLength: Int = 0) : Path(start) {
     override fun addDirection(street: Street) {
         super.addDirection(street)
         totalLength += street.length

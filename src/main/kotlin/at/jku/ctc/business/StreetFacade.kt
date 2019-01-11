@@ -4,6 +4,7 @@ import at.jku.ctc.entity.Street
 import at.jku.ctc.entity.StreetNeighbor
 import javax.enterprise.context.RequestScoped
 import javax.persistence.EntityManager
+import javax.persistence.NoResultException
 import javax.persistence.PersistenceContext
 
 @RequestScoped
@@ -16,8 +17,12 @@ open class StreetFacade {
         return em.find(Street::class.java, id)
     }
 
-    open fun getByName(name: String): Street {
-        return em.createNamedQuery("Street.FindByName", Street::class.java).setParameter("NAME", name).singleResult
+    open fun getByName(name: String): Street? {
+        return try {
+            em.createNamedQuery("Street.FindByName", Street::class.java).setParameter("NAME", name).singleResult
+        } catch (e: NoResultException) {
+            null
+        }
     }
 
     open fun getNeighbors(id: Long): List<Street> {
