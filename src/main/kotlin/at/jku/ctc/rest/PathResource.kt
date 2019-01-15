@@ -1,6 +1,7 @@
 package at.jku.ctc.rest
 
 import at.jku.ctc.business.PathFacade
+import at.jku.ctc.entity.ShortestPath
 import javax.inject.Inject
 import javax.json.JsonObject
 import javax.ws.rs.*
@@ -36,10 +37,20 @@ open class PathResource {
                              @QueryParam("avoidance") @DefaultValue("false") avoidance: Boolean,
                              @QueryParam("priority") @DefaultValue("Lowest") priority: String):
             Response {
-        if(from.toLongOrNull() != null && to.toLongOrNull() != null) {
-            return Response.ok(pathFacade.findShortestPath(from.toLong(), to.toLong(), avoidance, priority)).build()
+        val path: ShortestPath? = if(from.toLongOrNull() != null && to.toLongOrNull() != null) {
+            pathFacade.findShortestPath(from.toLong(), to.toLong(), avoidance, priority)
+        } else {
+            pathFacade.findShortestPath(from, to, avoidance, priority)
         }
-        return Response.ok(pathFacade.findShortestPath(from, to, avoidance, priority)).build()
+        return if (path == null) {
+            if(avoidance) {
+                Response.status(Response.Status.BAD_REQUEST).build()
+            } else {
+                Response.status(Response.Status.BAD_REQUEST).build()
+            }
+        } else {
+            Response.ok(path).build()
+        }
     }
 
 }

@@ -9,10 +9,12 @@ import javax.inject.Inject
 
 @ApplicationScoped
 open class StreetMap(private val mapCache: MutableMap<Street, Array<Street>> = mutableMapOf(),
-                private val blockedPathsCache: Array<BlockedPath> = emptyArray()) {
+                private val blockedPathsCache: MutableList<BlockedPath> = mutableListOf()) {
 
     @Inject
     private lateinit var streetFacade: StreetFacade
+    @Inject
+    private lateinit var pathFacade: PathFacade
 
     open fun getStreetNeighbors(street: Street): Array<Street> {
         return mapCache.getOrPut(street) {
@@ -21,7 +23,22 @@ open class StreetMap(private val mapCache: MutableMap<Street, Array<Street>> = m
     }
 
     open fun isPathBlockedForPriority(path: Path, priorityType: PriorityType): Boolean {
-        TODO("Check if part of the path is in cache or check for the endpoint")
+        for (blockedPath in blockedPathsCache) {
+            if (blockedPath.containsPath(path) && blockedPath.priorityToAvoid.ordinal >= priorityType.ordinal) {
+                return true
+            }
+        }
+        while (pathFacade.hasNewBlockedPaths(blockedPathsCache.size)) {
+            val newEntries = pathFacade.getBlockesPaths(blockedPathsCache.size, 10)
+            for (blockedPath in newEntries) {
+                if (blockedPath.containsPath(path) && blockedPath.priorityToAvoid.ordinal >= priorityType.ordinal) {
+                    blockedPathsCache.addAll(newEntries)
+                    return true
+                }
+            }
+            blockedPathsCache.addAll(newEntries)
+        }
+        return false
     }
 
 }

@@ -6,7 +6,7 @@ import at.jku.ctc.entity.ShortestPath
 
 interface IShortestPath {
 
-    fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType = PriorityType.Normal):
-            ShortestPath
+    fun findShortestPath(startAddress: Address, endAddress: Address, avoidPaths: Boolean = false,
+                         priorityType: PriorityType = PriorityType.Normal): ShortestPath
 
 }

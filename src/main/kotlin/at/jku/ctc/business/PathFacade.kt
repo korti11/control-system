@@ -40,23 +40,36 @@ open class PathFacade {
         return em.merge(pathManager.createBlockedPath(startDate, blockadeType, priorityType, *streets))
     }
 
-    open fun findShortestPath(from: String, to: String, avoidance: Boolean, priority: String): ShortestPath {
+    open fun getBlockesPaths(first: Int, max: Int): List<BlockedPath> {
+        return em.createNamedQuery("BlockedPath.GetAll", BlockedPath::class.java)
+                .setFirstResult(first).setMaxResults(max).resultList
+    }
+
+    open fun hasNewBlockedPaths(size: Int): Boolean {
+        return em.createNamedQuery("BlockedPath.Size").singleResult != size.toLong()
+    }
+
+    open fun findShortestPath(from: String, to: String, avoidance: Boolean, priority: String): ShortestPath? {
         return findShortestPath(streetFacade.getByName(from), streetFacade.getByName(to),
                 avoidance, PriorityType.valueOf(priority))
     }
 
-    open fun findShortestPath(from: Long, to: Long, avoidance: Boolean, priority: String): ShortestPath {
+    open fun findShortestPath(from: Long, to: Long, avoidance: Boolean, priority: String): ShortestPath? {
         return findShortestPath(streetFacade.getById(from), streetFacade.getById(to),
                 avoidance, PriorityType.valueOf(priority))
     }
 
     private fun findShortestPath(from: Street?, to: Street?, avoidance: Boolean, priorityType: PriorityType):
-            ShortestPath {
-        val startAddress = Address(street = checkNotNull(from) {"The start street should exist!"})
-        val endAddress = Address(street = checkNotNull(to) {"The end street should exist!"})
-        return when (avoidance) {
-            true -> pathManager.findShortestPath(startAddress, endAddress, priorityType)
-            false -> pathManager.findShortestPath(startAddress, endAddress)
+            ShortestPath? {
+        try {
+            val startAddress = Address(street = checkNotNull(from) { "The start street should exist!" })
+            val endAddress = Address(street = checkNotNull(to) { "The end street should exist!" })
+            return when (avoidance) {
+                true -> pathManager.findShortestPath(startAddress, endAddress, priorityType)
+                false -> pathManager.findShortestPath(startAddress, endAddress)
+            }
+        } catch (e: IllegalStateException) {
+            return null
         }
     }
 }

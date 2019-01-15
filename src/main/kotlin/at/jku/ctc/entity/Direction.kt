@@ -15,4 +15,24 @@ data class Direction(@field:Id @field:GeneratedValue(strategy = GenerationType.I
     override fun hasNext(): Boolean {
         return direction != null
     }
+
+    fun deepCopy(): Direction {
+        val copy = Direction(street = street)
+        copy.direction = this.direction?.deepCopy()
+        return copy
+    }
+
+    fun containsStreet(street: Street): Boolean {
+        if (this.street == street) {
+            return true
+        }
+        var temp = this
+        while (temp.hasNext()) {
+            temp = temp.next()
+            if (temp.street == street) {
+                return true
+            }
+        }
+        return false
+    }
 }

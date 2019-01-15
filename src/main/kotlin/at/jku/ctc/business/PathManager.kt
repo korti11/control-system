@@ -46,15 +46,11 @@ open class PathManager {
     }
 
     open fun findShortestPath(startAddress: Address, endAddress: Address): ShortestPath {
-        return shortestPath.findShortestPath(startAddress, endAddress, PriorityType.Lowest)
+        return shortestPath.findShortestPath(startAddress, endAddress)
     }
 
     open fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType): ShortestPath {
-        TODO("Implement the algorithm to find the shortest path with path avoidance from point A to point B")
-    }
-
-    open fun checkForPathAvoidency(path: Path, priorityType: PriorityType): Boolean {
-        TODO("Implement the algorithm to check if it should avoid the path")
+        return shortestPath.findShortestPath(startAddress, endAddress, true, priorityType)
     }
 
 }
