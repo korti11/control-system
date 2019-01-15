@@ -16,7 +16,7 @@ open class Dijkstra : IShortestPath {
 
     override fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType):
             ShortestPath {
-        var currentNode = ShortestPath(Direction(startAddress.street))
+        var currentNode = ShortestPath(Direction(street = startAddress.street))
         while (currentNode.end.street != endAddress.street) {
             seekedStreets[currentNode.end.street] = currentNode
             val neighbors = streetMap.getStreetNeighbors(currentNode.end.street)

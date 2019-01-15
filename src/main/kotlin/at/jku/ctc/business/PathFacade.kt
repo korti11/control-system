@@ -6,28 +6,38 @@ import java.time.format.DateTimeFormatter
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 import javax.json.JsonObject
+import javax.json.JsonString
+import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
+import javax.transaction.Transactional
 
 @RequestScoped
 open class PathFacade {
 
+    @PersistenceContext
+    private lateinit var em: EntityManager
     @Inject
     private lateinit var pathManager: PathManager
     @Inject
     private lateinit var streetFacade: StreetFacade
 
+    @Transactional
     open fun createMaintenancePath(obj: JsonObject): MaintenancePath {
         val startDate = LocalDateTime.parse(obj.getString("startDate"), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         val endDate = LocalDateTime.parse(obj.getString("endDate"), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        val streets = obj.getJsonArray("streets").mapNotNull { streetFacade.getByName(it.toString()) }.toTypedArray()
-        return pathManager.createMaintenancePath(startDate, endDate, *streets)
+        val streets = obj.getJsonArray("streets").mapNotNull { streetFacade.getByName((it as JsonString).string) }
+                .toTypedArray()
+        return em.merge(pathManager.createMaintenancePath(startDate, endDate, *streets))
     }
 
+    @Transactional
     open fun createBlockedPath(obj: JsonObject): BlockedPath {
         val startDate = LocalDateTime.parse(obj.getString("startDate"), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         val blockadeType = BlockadeType.valueOf(obj.getString("blockadeType"))
         val priorityType = PriorityType.valueOf(obj.getString("priority"))
-        val streets = obj.getJsonArray("streets").mapNotNull { streetFacade.getByName(it.toString()) }.toTypedArray()
-        return pathManager.createBlockedPath(startDate, blockadeType, priorityType, *streets)
+        val streets = obj.getJsonArray("streets").mapNotNull { streetFacade.getByName((it as JsonString).string) }
+                .toTypedArray()
+        return em.merge(pathManager.createBlockedPath(startDate, blockadeType, priorityType, *streets))
     }
 
     open fun findShortestPath(from: String, to: String, avoidance: Boolean, priority: String): ShortestPath {

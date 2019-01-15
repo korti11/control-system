@@ -1,6 +1,12 @@
 package at.jku.ctc.entity
 
 import java.time.LocalDateTime
+import javax.persistence.*
 
-open class BlockedPath(start: Direction, open val blockadeStart: LocalDateTime, val blockadeType: BlockadeType,
-                       open val priorityToAvoid: PriorityType) : Path(start)
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+open class BlockedPath(@field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = -1,
+                       @field:ManyToOne override val start: Direction = Direction(),
+                       val blockadeStart: LocalDateTime = LocalDateTime.MIN,
+                       val blockadeType: BlockadeType = BlockadeType.Maintenance,
+                       val priorityToAvoid: PriorityType = PriorityType.Lowest) : Path(start)

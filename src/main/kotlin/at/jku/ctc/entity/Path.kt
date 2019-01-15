@@ -6,9 +6,9 @@ open class Path(open val start: Direction, open var end: Direction = start) : It
         return start
     }
 
-    open fun addDirection(street: Street) {
-        this.end.direction = Direction(street)
-        this.end = checkNotNull(this.end.direction)
+    open fun addDirection(direction: Direction) {
+        this.end.direction = direction
+        this.end = direction
     }
 
     open fun removeEnd() {

@@ -11,10 +11,13 @@ open class PathManager {
 
     @Inject
     private lateinit var shortestPath: IShortestPath
+    @Inject
+    private lateinit var directionFacade: DirectionFacade
 
     open fun createMaintenancePath(startDate: LocalDateTime, endDate: LocalDateTime,
                               vararg streets: Street): MaintenancePath {
-        val maintenancePath = MaintenancePath(Direction(streets[0]), startDate, endDate)
+        val start = directionFacade.storeDirection(Direction(street = streets[0]))
+        val maintenancePath = MaintenancePath(start = start, blockadeStart = startDate, maintenanceFinish =  endDate)
         streets.forEachIndexed { index, street ->
             street.takeIf { index > 0 }?.apply { constructPath(maintenancePath, street) }
         }
@@ -23,7 +26,9 @@ open class PathManager {
 
     open fun createBlockedPath(startDate: LocalDateTime, blockadeType: BlockadeType, priorityType: PriorityType,
                           vararg streets: Street): BlockedPath {
-        val blockedPath = BlockedPath(Direction(streets[0]), startDate, blockadeType, priorityType)
+        val start = directionFacade.storeDirection(Direction(street = streets[0]))
+        val blockedPath = BlockedPath(start = start, blockadeStart = startDate, blockadeType = blockadeType,
+                priorityToAvoid = priorityType)
         streets.forEachIndexed { index, street ->
             street.takeIf { index > 0 }?.apply { constructPath(blockedPath, street) }
         }
@@ -31,7 +36,12 @@ open class PathManager {
     }
 
     open fun constructPath(path: Path, street: Street): Path {
-        path.addDirection(street)
+        if(path is BlockedPath) {
+            val direction = directionFacade.storeDirection(Direction(street = street))
+            path.addDirection(direction)
+        } else {
+            path.addDirection(Direction(street = street))
+        }
         return path
     }
 

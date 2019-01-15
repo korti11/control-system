@@ -1,9 +1,11 @@
 package at.jku.ctc.entity
 
 import java.time.LocalDateTime
+import javax.persistence.Entity
 
-data class MaintenancePath(override val start: Direction, override val blockadeStart: LocalDateTime,
-                           val maintenanceFinish: LocalDateTime,
-                           override val priorityToAvoid: PriorityType = PriorityType.Highest,
-                           val maintenanceFinished: Boolean = false) :
-        BlockedPath(start, blockadeStart, BlockadeType.Maintenance, priorityToAvoid)
+@Entity
+class MaintenancePath(id: Long = -1, start: Direction = Direction(),
+                      blockadeStart: LocalDateTime = LocalDateTime.MIN,
+                      val maintenanceFinish: LocalDateTime = LocalDateTime.MIN,
+                      val maintenanceFinished: Boolean = false) :
+        BlockedPath(id, start, blockadeStart, BlockadeType.Maintenance, PriorityType.Highest)
