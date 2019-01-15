@@ -1,7 +1,10 @@
 package at.jku.ctc.algorithm
 
 import at.jku.ctc.business.StreetMap
-import at.jku.ctc.entity.*
+import at.jku.ctc.entity.Direction
+import at.jku.ctc.entity.PriorityType
+import at.jku.ctc.entity.ShortestPath
+import at.jku.ctc.entity.Street
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 
@@ -14,10 +17,10 @@ open class Dijkstra : IShortestPath {
     private val neighbors = mutableListOf<ShortestPath>()
     private val seekedStreets = mutableMapOf<Street, ShortestPath>()
 
-    override fun findShortestPath(startAddress: Address, endAddress: Address,
+    override fun findShortestPath(startStreet: Street, endStreet: Street,
                                   avoidPaths: Boolean, priorityType: PriorityType): ShortestPath {
-        var currentNode = ShortestPath(Direction(street = startAddress.street))
-        while (currentNode.end.street != endAddress.street) {
+        var currentNode = ShortestPath(Direction(street = startStreet))
+        while (currentNode.end.street != endStreet) {
             seekedStreets[currentNode.end.street] = currentNode
             val neighbors = streetMap.getStreetNeighbors(currentNode.end.street)
             for(neighbor in neighbors) {

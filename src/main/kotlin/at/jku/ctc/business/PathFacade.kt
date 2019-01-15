@@ -62,11 +62,11 @@ open class PathFacade {
     private fun findShortestPath(from: Street?, to: Street?, avoidance: Boolean, priorityType: PriorityType):
             ShortestPath? {
         try {
-            val startAddress = Address(street = checkNotNull(from) { "The start street should exist!" })
-            val endAddress = Address(street = checkNotNull(to) { "The end street should exist!" })
+            val start = checkNotNull(from) { "The start street should exist!" }
+            val end = checkNotNull(to) { "The end street should exist!" }
             return when (avoidance) {
-                true -> pathManager.findShortestPath(startAddress, endAddress, priorityType)
-                false -> pathManager.findShortestPath(startAddress, endAddress)
+                true -> pathManager.findShortestPath(start, end, priorityType)
+                false -> pathManager.findShortestPath(start, end)
             }
         } catch (e: IllegalStateException) {
             return null

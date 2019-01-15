@@ -45,12 +45,12 @@ open class PathManager {
         return path
     }
 
-    open fun findShortestPath(startAddress: Address, endAddress: Address): ShortestPath {
-        return shortestPath.findShortestPath(startAddress, endAddress)
+    open fun findShortestPath(startStreet: Street, endStreet: Street): ShortestPath {
+        return shortestPath.findShortestPath(startStreet, endStreet)
     }
 
-    open fun findShortestPath(startAddress: Address, endAddress: Address, priorityType: PriorityType): ShortestPath {
-        return shortestPath.findShortestPath(startAddress, endAddress, true, priorityType)
+    open fun findShortestPath(startStreet: Street, endStreet: Street, priorityType: PriorityType): ShortestPath {
+        return shortestPath.findShortestPath(startStreet, endStreet, true, priorityType)
     }
 
 }

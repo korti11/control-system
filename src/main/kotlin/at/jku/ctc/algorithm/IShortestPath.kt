@@ -1,12 +1,12 @@
 package at.jku.ctc.algorithm
 
-import at.jku.ctc.entity.Address
 import at.jku.ctc.entity.PriorityType
 import at.jku.ctc.entity.ShortestPath
+import at.jku.ctc.entity.Street
 
 interface IShortestPath {
 
-    fun findShortestPath(startAddress: Address, endAddress: Address, avoidPaths: Boolean = false,
+    fun findShortestPath(startStreet: Street, endStreet: Street, avoidPaths: Boolean = false,
                          priorityType: PriorityType = PriorityType.Normal): ShortestPath
 
 }
